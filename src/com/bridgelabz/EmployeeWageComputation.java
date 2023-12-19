@@ -1,12 +1,15 @@
 package com.bridgelabz;
-//UC 13
-// Store the Daily Wage along with the Total Wage.
+// UC 14
+// Ability to get the Total Wage when queried by Company.
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 interface IComputeEmpWage{
     void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth);
     void computeEmpWage();
+    int getTotalWage(String company);           // Get the total wage when queried by company
 }
 class CompanyEmpWage{
     String company;
@@ -32,14 +35,17 @@ class EmployeeWageComputation implements IComputeEmpWage{
     final int IS_PART_TIME=1, IS_FULL_TIME=2;
     int numOfCompany = 0;
     LinkedList<CompanyEmpWage> companyEmpWageList;              //Linked list of class
+    Map<String, CompanyEmpWage> companyEmpWageMap;              // Hash map with named_company and company class
 
     EmployeeWageComputation(){
         companyEmpWageList = new LinkedList<>();
+        companyEmpWageMap = new HashMap<>();
     }
     public void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
 
         CompanyEmpWage companyEmpWage  = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
         companyEmpWageList.add(companyEmpWage);
+        companyEmpWageMap.put(company,companyEmpWage);
     }
     public void computeEmpWage() {
         for (int i = 0; i < companyEmpWageList.size(); i++) {
@@ -79,6 +85,9 @@ class EmployeeWageComputation implements IComputeEmpWage{
         }
         return totalEmpHrs * companyEmpWage.empRatePerHour;
     }
+    public int getTotalWage(String company){
+        return companyEmpWageMap.get(company).totalEmpWage;
+    }
 
     public static void main(String[] args) {
         System.out.println("Welcome to Employee Wage Computation");
@@ -86,5 +95,6 @@ class EmployeeWageComputation implements IComputeEmpWage{
         empWageBuilder.addCompanyEmpWage("DMart",300,21,100);
         empWageBuilder.addCompanyEmpWage("Reliance",250,25,100);
         empWageBuilder.computeEmpWage();
+        System.out.println("Total wage for Reliance company : "+empWageBuilder.getTotalWage("Reliance"));
     }
 }
