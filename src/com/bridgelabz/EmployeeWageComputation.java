@@ -1,6 +1,8 @@
 package com.bridgelabz;
-//UC 11
-// Ability to manage Employee Wage of multiple companies using API approach
+//UC 12
+// Refactor to have list of multiple companies to manage Employee Wage.
+
+import java.util.LinkedList;
 
 interface IComputeEmpWage{
     void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth);
@@ -8,8 +10,7 @@ interface IComputeEmpWage{
 }
 class CompanyEmpWage{
     String company;
-    int empRatePerHour, numOfWorkingDays, maxHoursPerMonth;
-    int totalEmpWage;
+    int empRatePerHour, numOfWorkingDays, maxHoursPerMonth,totalEmpWage;
     CompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
         this.company=company;
         this.empRatePerHour=empRatePerHour;
@@ -26,19 +27,21 @@ class CompanyEmpWage{
 class EmployeeWageComputation implements IComputeEmpWage{
     final int IS_PART_TIME=1, IS_FULL_TIME=2;
     int numOfCompany = 0;
-    CompanyEmpWage[] companyEmpWageArray;
+    LinkedList<CompanyEmpWage> companyEmpWageList;              //Linked list of class
 
     EmployeeWageComputation(){
-        companyEmpWageArray = new CompanyEmpWage[5];
+        companyEmpWageList = new LinkedList<>();
     }
     public void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
-        companyEmpWageArray[numOfCompany] = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
-        numOfCompany++;
+
+        CompanyEmpWage companyEmpWage  = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
+        companyEmpWageList.add(companyEmpWage);
     }
     public void computeEmpWage() {
-        for (int i = 0; i < numOfCompany; i++) {
-            companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
-            System.out.println(companyEmpWageArray[i]);
+        for (int i = 0; i < companyEmpWageList.size(); i++) {
+            CompanyEmpWage companyEmpWage = companyEmpWageList.get(i);
+            companyEmpWage.setTotalEmpWage(this.computeEmpWage(companyEmpWage));
+            System.out.println(companyEmpWage);
         }
     }
     private int computeEmpWage(CompanyEmpWage companyEmpWage){
@@ -67,8 +70,8 @@ class EmployeeWageComputation implements IComputeEmpWage{
     public static void main(String[] args) {
         System.out.println("Welcome to Employee Wage Computation");
         EmployeeWageComputation empWageBuilder = new EmployeeWageComputation();
-        empWageBuilder.addCompanyEmpWage("DMart",20,2,10);
-        empWageBuilder.addCompanyEmpWage("Reliance",10,4,20);
+        empWageBuilder.addCompanyEmpWage("DMart",300,21,100);
+        empWageBuilder.addCompanyEmpWage("Reliance",250,25,100);
         empWageBuilder.computeEmpWage();
     }
 }
