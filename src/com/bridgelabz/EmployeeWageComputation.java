@@ -1,8 +1,14 @@
 package com.bridgelabz;
+//UC 11
+// Ability to manage Employee Wage of multiple companies using API approach
 
+interface IComputeEmpWage{
+    void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth);
+    void computeEmpWage();
+}
 class CompanyEmpWage{
-    final String company;
-    final int empRatePerHour, numOfWorkingDays, maxHoursPerMonth;
+    String company;
+    int empRatePerHour, numOfWorkingDays, maxHoursPerMonth;
     int totalEmpWage;
     CompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
         this.company=company;
@@ -17,19 +23,19 @@ class CompanyEmpWage{
         return "Total Employee Wage for Company : "+company +" is : "+totalEmpWage;
     }
 }
-class EmployeeWageComputation {
-    static final int IS_PART_TIME=1, IS_FULL_TIME=2;
-    private int numOfCompany = 0;
-    private CompanyEmpWage[] companyEmpWageArray;
+class EmployeeWageComputation implements IComputeEmpWage{
+    final int IS_PART_TIME=1, IS_FULL_TIME=2;
+    int numOfCompany = 0;
+    CompanyEmpWage[] companyEmpWageArray;
 
     EmployeeWageComputation(){
         companyEmpWageArray = new CompanyEmpWage[5];
     }
-    private void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
+    public void addCompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
         companyEmpWageArray[numOfCompany] = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
         numOfCompany++;
     }
-    void computeEmpWage() {
+    public void computeEmpWage() {
         for (int i = 0; i < numOfCompany; i++) {
             companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
             System.out.println(companyEmpWageArray[i]);
