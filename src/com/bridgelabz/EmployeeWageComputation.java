@@ -1,6 +1,6 @@
 package com.bridgelabz;
-//UC 12
-// Refactor to have list of multiple companies to manage Employee Wage.
+//UC 13
+// Store the Daily Wage along with the Total Wage.
 
 import java.util.LinkedList;
 
@@ -11,6 +11,7 @@ interface IComputeEmpWage{
 class CompanyEmpWage{
     String company;
     int empRatePerHour, numOfWorkingDays, maxHoursPerMonth,totalEmpWage;
+    int daily_wage;
     CompanyEmpWage(String company, int empRatePerHour,int numOfWorkingDays, int maxHoursPerMonth){
         this.company=company;
         this.empRatePerHour=empRatePerHour;
@@ -20,8 +21,11 @@ class CompanyEmpWage{
     void setTotalEmpWage(int totalEmpWage){
         this.totalEmpWage = totalEmpWage;
     }
+    void setDaily_wage(int daily_wage){         // Stores daily wage
+        this.daily_wage = daily_wage;
+    }
     public String toString(){
-        return "Total Employee Wage for Company : "+company +" is : "+totalEmpWage;
+        return "Total Employee Wage for Company : "+company +" is : "+totalEmpWage+", Daily wage : "+daily_wage;
     }
 }
 class EmployeeWageComputation implements IComputeEmpWage{
@@ -41,8 +45,17 @@ class EmployeeWageComputation implements IComputeEmpWage{
         for (int i = 0; i < companyEmpWageList.size(); i++) {
             CompanyEmpWage companyEmpWage = companyEmpWageList.get(i);
             companyEmpWage.setTotalEmpWage(this.computeEmpWage(companyEmpWage));
+            //Daily wage = Day hours * rate per hour
+            companyEmpWage.setDaily_wage(this.daily_wage(companyEmpWage));
             System.out.println(companyEmpWage);
         }
+    }
+    int daily_wage(CompanyEmpWage companyEmpWage){      //Calculated daily wage
+        //variables
+        int daily_wage,day_hour;
+        day_hour = companyEmpWage.maxHoursPerMonth / companyEmpWage.numOfWorkingDays;
+        daily_wage = day_hour * companyEmpWage.empRatePerHour;
+        return daily_wage;
     }
     private int computeEmpWage(CompanyEmpWage companyEmpWage){
         //variables
